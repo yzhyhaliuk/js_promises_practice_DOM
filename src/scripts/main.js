@@ -10,7 +10,7 @@ const promise1 = new Promise((resolve, reject) => {
   const clickHandle = () => {
     const textResolve = 'First promise was resolved';
 
-    notification.append(textResolve);
+    notification.textContent = textResolve;
 
     resolve(notification);
     clickHappened = true;
@@ -24,7 +24,7 @@ const promise1 = new Promise((resolve, reject) => {
     if (!clickHappened) {
       const textReject = 'First promise was rejected';
 
-      notification.append(textReject);
+      notification.textContent = textReject;
       reject(notification);
     }
   }, 3000);
@@ -34,7 +34,7 @@ const promise2 = new Promise((resolve) => {
   const clickHandle = () => {
     const textResolve = 'Second promise was resolved';
 
-    notification.append(textResolve);
+    notification.textContent = textResolve;
 
     resolve(notification);
 
@@ -52,21 +52,23 @@ const promise2 = new Promise((resolve) => {
 });
 
 const promise3 = new Promise((resolve) => {
-  let isContextMenuAdded = false;
+  let isActivated = false;
   const contextMenuHandle = (e) => {
-    const textResolve = 'Third promise was resolved';
+    if (isActivated) {
+      const textResolve = 'Third promise was resolved';
 
-    e.preventDefault();
+      e.preventDefault();
+      notification.textContent = textResolve;
 
-    resolve(notification.append(textResolve));
-    document.removeEventListener('contextmenu', contextMenuHandle);
+      resolve(notification);
+      document.removeEventListener('contextmenu', contextMenuHandle);
+    }
   };
 
+  document.addEventListener('contextmenu', contextMenuHandle);
+
   document.addEventListener('click', () => {
-    if (!isContextMenuAdded) {
-      document.addEventListener('contextmenu', contextMenuHandle);
-      isContextMenuAdded = true;
-    }
+    isActivated = true;
   });
 });
 
